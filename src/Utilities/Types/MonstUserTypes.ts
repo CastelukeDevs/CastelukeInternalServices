@@ -1,4 +1,4 @@
-import { ICurrencyTypes } from "../../../../../Utilities/Types/MonstCommonTypes";
+import { ICurrencyTypes } from "./MonstCommonTypes";
 
 export type ICreateUserProp = {
   firstName: string;

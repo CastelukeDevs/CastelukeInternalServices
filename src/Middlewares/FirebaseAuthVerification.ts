@@ -1,16 +1,18 @@
 import type { RequestHandler } from "express";
 import FirebaseAdmin from "../Config/Firebase/FirebaseAdmin";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import StatusCode from "../Utilities/StatusCode";
 
 class FirebaseAuthVerification {
   decodeToken: RequestHandler = async (req, res, next) => {
-    // console.log("new request", req.headers);
+    console.log("new request", req.headers);
 
     if (req.headers.authorization == null) {
       console.log("Unauthorized request");
 
-      return res.status(401).send({
+      return res.status(StatusCode.unauthorized).send({
         message: "Unauthorized: Auth null",
+        code: StatusCode.unauthorized,
       });
     }
     const userToken = req.headers.authorization.split(" ")[1];
@@ -23,13 +25,20 @@ class FirebaseAuthVerification {
         }
         console.log("Unauthorized request");
         return res
-          .status(401)
-          .send({ message: "Unauthorized: Unauthorized request" });
+          .status(StatusCode.unauthorized)
+          .send({
+            message: "Unauthorized: Unauthorized request",
+            code: StatusCode.unauthorized,
+          });
       })
       .catch((err) => {
         console.error("Firebase Auth error", err);
         //   throw res.json({ message: "Getting Authorization Error: " + error });
-        return res.status(500).send(err);
+        return res.status(StatusCode.generalError).send({
+          message: "Firebase authentication error",
+          error: err,
+          code: StatusCode.generalError,
+        });
       });
   };
 }
