@@ -1,11 +1,11 @@
 import type { RequestHandler } from "express";
-import FirebaseAdmin from "../Config/Firebase/FirebaseAdmin";
+import Admin from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import StatusCode from "../Utilities/StatusCode";
 
 class FirebaseAuthVerification {
   decodeToken: RequestHandler = async (req, res, next) => {
-    console.log("new request", req.headers);
+    // console.log("new request", req.headers);
 
     if (req.headers.authorization == null) {
       console.log("Unauthorized request");
@@ -16,7 +16,7 @@ class FirebaseAuthVerification {
       });
     }
     const userToken = req.headers.authorization.split(" ")[1];
-    await FirebaseAdmin.auth()
+    await Admin.auth()
       .verifyIdToken(userToken)
       .then((userFromToken: DecodedIdToken) => {
         if (userFromToken) {
@@ -24,12 +24,10 @@ class FirebaseAuthVerification {
           return next();
         }
         console.log("Unauthorized request");
-        return res
-          .status(StatusCode.unauthorized)
-          .send({
-            message: "Unauthorized: Unauthorized request",
-            code: StatusCode.unauthorized,
-          });
+        return res.status(StatusCode.unauthorized).send({
+          message: "Unauthorized: Unauthorized request",
+          code: StatusCode.unauthorized,
+        });
       })
       .catch((err) => {
         console.error("Firebase Auth error", err);

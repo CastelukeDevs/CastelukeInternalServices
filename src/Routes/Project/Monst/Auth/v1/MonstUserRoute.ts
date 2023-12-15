@@ -7,6 +7,8 @@ import UserModel from "../../../../../Models/UserModel";
 import { ICreateUserProp } from "../../../../../Utilities/Types/MonstUserTypes";
 import ValidateEmptyObject from "../../../../../Utilities/ValidateEmptyObject";
 import StatusCode from "../../../../../Utilities/StatusCode";
+import MulterProvider from "../../../../../Config/Multer/MulterProvider";
+import UploadFile from "../../../../../Utilities/UploadFile";
 
 const MonstUserRoute = Router();
 
@@ -24,17 +26,17 @@ MonstUserRoute.get(userRoute, async (req, res) => {
 
   try {
     const user = await UserModel.findById(tokenData.uid);
-    if (user) return res.send(user);
-    setTimeout(() => {
-      res.status(StatusCode.notFound).send({
-        message: "User not found",
-        code: StatusCode.notFound,
-      });
-    }, 5000);
-    // res.status(StatusCode.notFound).send({
-    //   message: "User not found",
-    //   code: StatusCode.notFound,
-    // });
+
+    if (user) {
+      console.log("user fetch", user);
+
+      return res.send(user);
+    }
+
+    res.status(StatusCode.notFound).send({
+      message: "User not found",
+      code: StatusCode.notFound,
+    });
   } catch (error: any) {
     return res.status(StatusCode.generalError).send({
       message: error.message,
@@ -45,14 +47,14 @@ MonstUserRoute.get(userRoute, async (req, res) => {
 });
 
 //Create new User
-MonstUserRoute.post(userRoute, async (req, res) => {
+MonstUserRoute.post(userRoute, MulterProvider, async (req, res) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqForm: ICreateUserProp = req.body;
 
   const testObject = {
     1: reqForm.firstName,
     2: reqForm.lastName,
-    3: reqForm.DOB,
+    3: reqForm.dateOfBirth,
   };
 
   const test = ValidateEmptyObject(testObject);
@@ -70,19 +72,31 @@ MonstUserRoute.post(userRoute, async (req, res) => {
   newUser.email = tokenData.email!;
   newUser.firstName = reqForm.firstName;
   newUser.lastName = reqForm.lastName;
-  newUser.dateOfBirth = reqForm.DOB;
+  newUser.dateOfBirth = reqForm.dateOfBirth;
   newUser.defaultCurrency = reqForm.defaultCurrency;
-  newUser.avatarUrl = reqForm.avatarUrl;
+  // newUser.avatarUrl = reqForm.avatarUrl;
+
+  const file = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+  if (file[0]) {
+    await UploadFile(file[0])
+      .then((url) => {
+        newUser.avatarUrl = url;
+      })
+      .catch((err: any) => {
+        res.status(StatusCode.generalError).send({
+          message: err,
+          code: StatusCode.generalError,
+        });
+      });
+  }
 
   await newUser
     .save()
     .then((response) => {
       console.log("resp", response);
 
-      res.send({
-        message: "Success",
-        user: response.toJSON(),
-      });
+      res.send(response);
     })
     .catch((err: ErrorDescription) => {
       return res.status(StatusCode.generalError).send({
@@ -91,6 +105,39 @@ MonstUserRoute.post(userRoute, async (req, res) => {
         code: StatusCode.generalError,
       });
     });
+});
+
+MonstUserRoute.put(userRoute, MulterProvider, async (req, res) => {
+  const tokenData: DecodedIdToken = res.locals.authData!;
+  const reqForm: Partial<ICreateUserProp> = req.body;
+
+  const file = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+  if (file[0]) {
+    await UploadFile(file[0])
+      .then((url) => {
+        reqForm.avatarUrl = url;
+      })
+      .catch((err: any) => {
+        console.log("error uploading files", err);
+
+        // return res.status(StatusCode.generalError).send({
+        //   message: err,
+        //   code: StatusCode.generalError,
+        // });
+      });
+  }
+
+  const user = await UserModel.findByIdAndUpdate(tokenData.uid, reqForm, {
+    returnDocument: "after",
+  }).catch((error: ErrorDescription) => {
+    res.status(StatusCode.generalError).send({
+      message: error.errmsg,
+      code: StatusCode.generalError,
+    });
+  });
+
+  res.send(user);
 });
 
 export default MonstUserRoute;

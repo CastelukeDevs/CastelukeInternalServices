@@ -1,12 +1,24 @@
 import dotenv from "dotenv";
-import express, { Application } from "express";
-import multer from "multer";
-import RootRouter from "./src/Routes/Routes";
-import path from "path";
-import mongoose from "mongoose";
+import { initializeApp, cert, ServiceAccount } from "firebase-admin/app";
+import firebaseConfig from "./src/Config/Firebase/firebaseConfig";
 
 //For env File
 dotenv.config();
+
+//FIREBASE Global early initialization
+const serviceAccount = firebaseConfig as ServiceAccount;
+
+initializeApp({
+  credential: cert(serviceAccount),
+  storageBucket: `${process.env.FIRE_PROJECT_ID}.appspot.com`,
+});
+
+import express, { Application } from "express";
+import RootRouter from "./src/Routes/Routes";
+import path from "path";
+import mongoose from "mongoose";
+import multer from "multer";
+import MulterProvider from "./src/Config/Multer/MulterProvider";
 
 const app: Application = express();
 const port = process.env.SERVICE_PORT || 8000;
@@ -21,7 +33,7 @@ async function main() {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(multer().array(""));
+// app.use(MulterProvider.any());
 
 app.use(RootRouter);
 

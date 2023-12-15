@@ -6,4 +6,4 @@ const serviceAccount = firebaseConfig as admin.ServiceAccount;
 const config = {
   credential: admin.credential.cert(serviceAccount),
 };
-export default admin.initializeApp(config);
+export default admin;
