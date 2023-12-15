@@ -17,7 +17,6 @@ import express, { Application } from "express";
 import RootRouter from "./src/Routes/Routes";
 import path from "path";
 import mongoose from "mongoose";
-import multer from "multer";
 import MulterProvider from "./src/Config/Multer/MulterProvider";
 
 const app: Application = express();
@@ -33,7 +32,7 @@ async function main() {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(MulterProvider.any());
+app.use(MulterProvider);
 
 app.use(RootRouter);
 

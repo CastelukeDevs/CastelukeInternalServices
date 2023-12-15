@@ -47,7 +47,7 @@ MonstUserRoute.get(userRoute, async (req, res) => {
 });
 
 //Create new User
-MonstUserRoute.post(userRoute, MulterProvider, async (req, res) => {
+MonstUserRoute.post(userRoute, async (req, res) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqForm: ICreateUserProp = req.body;
 
@@ -107,7 +107,7 @@ MonstUserRoute.post(userRoute, MulterProvider, async (req, res) => {
     });
 });
 
-MonstUserRoute.put(userRoute, MulterProvider, async (req, res) => {
+MonstUserRoute.put(userRoute, async (req, res) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqForm: Partial<ICreateUserProp> = req.body;
 
