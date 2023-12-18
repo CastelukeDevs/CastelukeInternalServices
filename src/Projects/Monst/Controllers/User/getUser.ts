@@ -9,11 +9,7 @@ const getMonstUser = async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findById(tokenData.uid);
 
-    if (user) {
-      console.log("user fetch", user);
-
-      return res.send(user);
-    }
+    if (user) return res.send(user.toJSON());
 
     res.status(StatusCode.notFound).send({
       message: "User not found",

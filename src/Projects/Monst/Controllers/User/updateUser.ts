@@ -1,14 +1,14 @@
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { Request, Response } from "express";
-import { ICreateUserProp } from "../../../../Utilities/Types/MonstUserTypes";
 import UploadFile from "../../../../Utilities/UploadFile";
 import UserModel from "../../Models/UserModel";
 import { ErrorDescription } from "mongodb";
 import StatusCode from "../../../../Utilities/StatusCode";
+import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
 
 const updateUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
-  const reqForm: Partial<ICreateUserProp> = req.body;
+  const reqForm: Partial<ICreateUserRequest> = req.body;
 
   const file = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -33,6 +33,7 @@ const updateUser = async (req: Request, res: Response) => {
     res.status(StatusCode.generalError).send({
       message: error.errmsg,
       code: StatusCode.generalError,
+      error,
     });
   });
 

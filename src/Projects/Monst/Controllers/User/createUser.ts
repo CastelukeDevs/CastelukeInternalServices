@@ -1,15 +1,16 @@
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { Request, Response } from "express";
 import { ErrorDescription } from "mongodb";
-import { ICreateUserProp } from "@Utilities/Types/MonstUserTypes";
 import ValidateEmptyObject from "@Utilities/ValidateEmptyObject";
 import StatusCode from "@Utilities/StatusCode";
 import UserModel from "@Projects/Monst/Models/UserModel";
 import UploadFile from "@Utilities/UploadFile";
+import BalanceModel from "@Projects/Monst/Models/BalanceModel";
+import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
 
 const createUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
-  const reqForm: ICreateUserProp = req.body;
+  const reqForm: ICreateUserRequest = req.body;
 
   const testObject = {
     1: reqForm.firstName,
@@ -26,6 +27,7 @@ const createUser = async (req: Request, res: Response) => {
     });
 
   const newUser = new UserModel();
+  const newBalance = new BalanceModel();
 
   newUser._id = tokenData.uid;
   newUser.firebaseUID = tokenData.uid;
@@ -33,8 +35,11 @@ const createUser = async (req: Request, res: Response) => {
   newUser.firstName = reqForm.firstName;
   newUser.lastName = reqForm.lastName;
   newUser.dateOfBirth = reqForm.dateOfBirth;
-  newUser.defaultCurrency = reqForm.defaultCurrency;
+  // newUser.defaultCurrency = reqForm.defaultCurrency;
   // newUser.avatarUrl = reqForm.avatarUrl;
+
+  newBalance._id = tokenData.uid;
+  newBalance.defaultCurrency = reqForm.defaultCurrency;
 
   const file = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -44,27 +49,53 @@ const createUser = async (req: Request, res: Response) => {
         newUser.avatarUrl = url;
       })
       .catch((err: any) => {
-        res.status(StatusCode.generalError).send({
-          message: err,
-          code: StatusCode.generalError,
-        });
+        // return res.status(StatusCode.generalError).send({
+        //   message: err,
+        //   code: StatusCode.generalError,
+        // });
       });
   }
 
-  await newUser
-    .save()
-    .then((response) => {
-      console.log("resp", response);
+  const createUserDB = newUser.save();
+  const createBalanceDB = newBalance.save();
 
-      res.send(response);
+  await Promise.all([createUserDB, createBalanceDB])
+    .then((result) => {
+      console.log("user created", result);
+      res.send(result[0]);
     })
     .catch((err: ErrorDescription) => {
+      console.log("user creation error", err);
+
+      if (err.message?.includes("E11000")) {
+        return res.status(StatusCode.generalError).send({
+          message: "Exist/User data already exist",
+          error: err,
+          code: StatusCode.generalError,
+        });
+      }
+
       return res.status(StatusCode.generalError).send({
         message: err.message,
         error: err,
         code: StatusCode.generalError,
       });
     });
+
+  // await newUser
+  //   .save()
+  //   .then((response) => {
+  //     console.log("resp", response);
+
+  //     res.send(response);
+  //   })
+  //   .catch((err: ErrorDescription) => {
+  //     return res.status(StatusCode.generalError).send({
+  //       message: err.message,
+  //       error: err,
+  //       code: StatusCode.generalError,
+  //     });
+  //   });
 };
 
 export default createUser;
