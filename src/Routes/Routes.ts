@@ -1,8 +1,6 @@
-// import MonstRouter from "@Projects/Monst/Router/MonstRoute";
-import MonstRouter from "@Projects/Monst/Router/MonstRoute";
 import express, { Router } from "express";
 import path from "path";
-// import MonstRouter from "@Projects/Monst/Router/MonstRoute";
+import MonstRouter from "@Projects/Monst/Router/MonstRoute";
 
 const RootRouter = Router();
 

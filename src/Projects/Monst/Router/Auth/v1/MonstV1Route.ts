@@ -2,11 +2,13 @@ import { Router } from "express";
 import FirebaseAuthVerification from "@Middlewares/FirebaseAuthVerification";
 
 import MonstUserRoute from "./User/MonstUserRoute";
-import MonstAccountRoute from "./Account/MonstAccountRoute";
+import MonstWalletRoute from "./Wallet/MonstWalletRoute";
 
 const MonstV1Router = Router();
 
 const branchTest = "/test";
+const userBranch = "/user";
+const walletBranch = "/wallet";
 
 MonstV1Router.get(branchTest, (req, res) => {
   console.log(branchTest + " branch || received!");
@@ -15,7 +17,7 @@ MonstV1Router.get(branchTest, (req, res) => {
 
 MonstV1Router.use(FirebaseAuthVerification.decodeToken);
 
-MonstV1Router.use("/user", MonstUserRoute);
-MonstV1Router.use("/account", MonstAccountRoute);
+MonstV1Router.use(userBranch, MonstUserRoute);
+MonstV1Router.use(walletBranch, MonstWalletRoute);
 
 export default MonstV1Router;
