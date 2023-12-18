@@ -1,6 +1,7 @@
-import mongoose, { InferSchemaType, Schema, model } from "mongoose";
+import { Model, Schema, model } from "mongoose";
+import { IUser } from "../Types/UserTypes";
 
-const UserDataSchema = new Schema(
+const UserDataSchema = new Schema<IUser, Model<IUser>>(
   {
     _id: {
       type: String,
@@ -30,22 +31,12 @@ const UserDataSchema = new Schema(
     lastSignIn: { type: Date, default: new Date() },
     level: { type: Number, default: 0 },
     points: { type: Number, default: 0 },
-
-    //Wallet
-    totalBalance: Number,
-    wallet: { type: Array, default: [] },
-    defaultCurrency: {
-      type: Object,
-      default: {
-        currency: "US Dollar",
-        abbreviation: "USD",
-        sign: "$",
-      },
-    },
   },
   { timestamps: true }
 );
 
-export type IUser = InferSchemaType<typeof UserDataSchema>;
+UserDataSchema.set("toJSON", {
+  virtuals: true,
+});
 
 export default model<IUser>("User", UserDataSchema);
