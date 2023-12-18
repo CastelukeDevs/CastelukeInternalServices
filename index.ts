@@ -14,10 +14,11 @@ initializeApp({
 });
 
 import express, { Application } from "express";
-import RootRouter from "./src/Routes/Routes";
+// import RootRouter from "./src/Routes/Routes";
 import path from "path";
 import mongoose from "mongoose";
 import MulterProvider from "./src/Config/Multer/MulterProvider";
+import RootRouter from "@Routes/Routes";
 
 const app: Application = express();
 const port = process.env.SERVICE_PORT || 8000;

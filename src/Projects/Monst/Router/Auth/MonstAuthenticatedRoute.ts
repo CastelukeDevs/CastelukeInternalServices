@@ -1,6 +1,5 @@
 import { Router } from "express";
-import MonstUserRoute from "./v1/MonstUserRoute";
-import FirebaseAuthVerification from "../../../../Middlewares/FirebaseAuthVerification";
+import MonstV1Router from "./v1/MonstV1Route";
 
 const MonstAuthenticatedRoute = Router();
 
@@ -12,7 +11,6 @@ MonstAuthenticatedRoute.get(branchTest, (req, res) => {
   res.send({ message: "test ok!", dir: __dirname });
 });
 
-MonstAuthenticatedRoute.use(FirebaseAuthVerification.decodeToken);
-MonstAuthenticatedRoute.use(v1Route, MonstUserRoute);
+MonstAuthenticatedRoute.use(v1Route, MonstV1Router);
 
 export default MonstAuthenticatedRoute;

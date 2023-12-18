@@ -1,7 +1,7 @@
+import StatusCode from "@Utilities/StatusCode";
 import type { RequestHandler } from "express";
 import Admin from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
-import StatusCode from "../Utilities/StatusCode";
 
 class FirebaseAuthVerification {
   decodeToken: RequestHandler = async (req, res, next) => {
