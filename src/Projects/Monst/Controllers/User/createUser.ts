@@ -5,7 +5,7 @@ import ValidateEmptyObject from "@Utilities/ValidateEmptyObject";
 import StatusCode from "@Utilities/StatusCode";
 import UserModel from "@Projects/Monst/Models/UserModel";
 import UploadFile from "@Utilities/UploadFile";
-import BalanceModel from "@Projects/Monst/Models/BalanceModel";
+import BalanceModel from "@Projects/Monst/Models/AccountModel";
 import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
 
 const createUser = async (req: Request, res: Response) => {

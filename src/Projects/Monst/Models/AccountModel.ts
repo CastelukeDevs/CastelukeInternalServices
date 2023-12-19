@@ -1,7 +1,7 @@
 import { Model, Schema, Types, model } from "mongoose";
-import { IBalance } from "../Types/BalanceTypes";
+import { IAccount } from "../Types/BalanceTypes";
 
-const BalanceDataSchema = new Schema<IBalance, Model<IBalance>>(
+const AccountDataSchema = new Schema<IAccount, Model<IAccount>>(
   {
     _id: {
       type: String,
@@ -21,8 +21,8 @@ const BalanceDataSchema = new Schema<IBalance, Model<IBalance>>(
   { timestamps: true }
 );
 
-BalanceDataSchema.set("toJSON", {
+AccountDataSchema.set("toJSON", {
   virtuals: true,
 });
 
-export default model<IBalance>("Balance", BalanceDataSchema);
+export default model<IAccount>("Account", AccountDataSchema);

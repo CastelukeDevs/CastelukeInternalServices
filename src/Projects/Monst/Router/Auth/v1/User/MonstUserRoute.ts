@@ -1,14 +1,16 @@
 import createUser from "@Projects/Monst/Controllers/User/createUser";
 import getMonstUser from "@Projects/Monst/Controllers/User/getUser";
-import getUserBalance from "@Projects/Monst/Controllers/User/getUserBalance";
+import getUserAccount from "@Projects/Monst/Controllers/Account/getUserAccount";
 import updateUser from "@Projects/Monst/Controllers/User/updateUser";
 
 import { Router } from "express";
+import refreshUserAccount from "@Projects/Monst/Controllers/Account/refreshUserAccount";
 
 const MonstUserRoute = Router();
 
 const branchTest = "/test";
-const branchBalance = "/balance";
+const accountBranch = "/account";
+const refreshAccountBranch = accountBranch + "/refresh";
 
 MonstUserRoute.get(branchTest, (req, res) => {
   console.log(branchTest + " branch || received!");
@@ -21,6 +23,7 @@ MonstUserRoute.post("/", createUser);
 MonstUserRoute.put("/", updateUser);
 
 //User Balance Route
-MonstUserRoute.get(branchBalance, getUserBalance);
+MonstUserRoute.get(accountBranch, getUserAccount);
+MonstUserRoute.get(refreshAccountBranch, refreshUserAccount);
 
 export default MonstUserRoute;
