@@ -1,19 +1,23 @@
-import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { Request, Response } from "express";
-import UploadFile from "../../../../Utilities/UploadFile";
-import UserModel from "../../Models/UserModel";
 import { ErrorDescription } from "mongodb";
-import StatusCode from "../../../../Utilities/StatusCode";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+
+import UploadFile from "@Utilities/UploadFile";
+import StatusCode from "@Utilities/StatusCode";
+import UserModel from "@Projects/Monst/Models/UserModel";
 import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
 
 const updateUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqForm: Partial<ICreateUserRequest> = req.body;
 
-  const file = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const test = req.files;
+  const files = req.files as Express.Multer.File[];
+  const file: Express.Multer.File = files[0];
+  console.log("file", files);
 
-  if (file[0]) {
-    await UploadFile(file[0])
+  if (file) {
+    await UploadFile(file, { path: "user/avatar/", uid: tokenData.uid })
       .then((url) => {
         reqForm.avatarUrl = url;
       })

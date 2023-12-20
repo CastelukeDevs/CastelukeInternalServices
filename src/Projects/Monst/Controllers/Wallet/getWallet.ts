@@ -1,7 +1,8 @@
-import BalanceModel from "@Projects/Monst/Models/AccountModel";
 import { Request, Response } from "express";
-import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { Types } from "mongoose";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+
+import BalanceModel from "@Projects/Monst/Models/AccountModel";
 
 const getWallet = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;

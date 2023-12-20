@@ -1,10 +1,11 @@
-import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { Request, Response } from "express";
 import { ErrorDescription } from "mongodb";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+
 import ValidateEmptyObject from "@Utilities/ValidateEmptyObject";
 import StatusCode from "@Utilities/StatusCode";
-import UserModel from "@Projects/Monst/Models/UserModel";
 import UploadFile from "@Utilities/UploadFile";
+import UserModel from "@Projects/Monst/Models/UserModel";
 import BalanceModel from "@Projects/Monst/Models/AccountModel";
 import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
 
@@ -35,8 +36,6 @@ const createUser = async (req: Request, res: Response) => {
   newUser.firstName = reqForm.firstName;
   newUser.lastName = reqForm.lastName;
   newUser.dateOfBirth = reqForm.dateOfBirth;
-  // newUser.defaultCurrency = reqForm.defaultCurrency;
-  // newUser.avatarUrl = reqForm.avatarUrl;
 
   newBalance._id = tokenData.uid;
   newBalance.defaultCurrency = reqForm.defaultCurrency;
@@ -44,11 +43,13 @@ const createUser = async (req: Request, res: Response) => {
   const file = req.files as { [fieldname: string]: Express.Multer.File[] };
 
   if (file[0]) {
-    await UploadFile(file[0])
+    await UploadFile(file[0], { path: "user/avatar/", uid: tokenData.uid })
       .then((url) => {
         newUser.avatarUrl = url;
       })
       .catch((err: any) => {
+        console.log("upload error", err);
+
         // return res.status(StatusCode.generalError).send({
         //   message: err,
         //   code: StatusCode.generalError,
@@ -81,21 +82,6 @@ const createUser = async (req: Request, res: Response) => {
         code: StatusCode.generalError,
       });
     });
-
-  // await newUser
-  //   .save()
-  //   .then((response) => {
-  //     console.log("resp", response);
-
-  //     res.send(response);
-  //   })
-  //   .catch((err: ErrorDescription) => {
-  //     return res.status(StatusCode.generalError).send({
-  //       message: err.message,
-  //       error: err,
-  //       code: StatusCode.generalError,
-  //     });
-  //   });
 };
 
 export default createUser;

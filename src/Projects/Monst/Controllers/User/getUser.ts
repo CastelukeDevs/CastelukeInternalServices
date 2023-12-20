@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
-import UserModel from "../../Models/UserModel";
-import StatusCode from "../../../../Utilities/StatusCode";
+
 import pickObject from "@Utilities/PickObject";
+import UserModel from "@Projects/Monst/Models/UserModel";
+import StatusCode from "@Utilities/StatusCode";
 
 const getMonstUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
