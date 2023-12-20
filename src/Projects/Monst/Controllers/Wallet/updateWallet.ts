@@ -1,15 +1,20 @@
+import { Request, Response } from "express";
+import { Types } from "mongoose";
+import { ErrorDescription } from "mongodb";
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+
 import WalletModel from "@Projects/Monst/Models/WalletModel";
 import { IWallet } from "@Projects/Monst/Types/WalletTypes";
 import StatusCode from "@Utilities/StatusCode";
-import { Request, Response } from "express";
-import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
-import { ErrorDescription } from "mongodb";
-import { Types } from "mongoose";
+import UploadFile from "@Utilities/UploadFile";
 
 const updateWallet = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const walletId = req.query.id as unknown as Types.ObjectId;
   const walletData: Partial<IWallet> = req.body;
+
+  const files = req.files as Express.Multer.File[];
+  const file: Express.Multer.File = files[0];
 
   if (walletId == null) {
     return res.status(StatusCode.badRequest).send({
@@ -36,6 +41,16 @@ const updateWallet = async (req: Request, res: Response) => {
       message: "Unauthorized/Wallet is not owned by user",
       code: StatusCode.unauthorized,
     });
+  }
+
+  if (file) {
+    await UploadFile(file, { path: "user/wallet/", uid: tokenData.uid })
+      .then((url) => {
+        walletData.imageUrl = url;
+      })
+      .catch((err: any) => {
+        console.log("error uploading files", err);
+      });
   }
 
   await wallet

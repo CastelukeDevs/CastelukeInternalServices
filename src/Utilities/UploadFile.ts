@@ -1,16 +1,22 @@
 import admin from "firebase-admin";
-const { getDownloadURL } = require("firebase-admin/storage");
+import { getDownloadURL } from "firebase-admin/storage";
+import { IStoragePath } from "./StoragePath";
+// const { getDownloadURL } = require("firebase-admin/storage");
 
-export default (file: any, uid?: string) => {
+type IUploadFileOption = {
+  path: IStoragePath;
+  uid?: string;
+};
+export default (file: any, options: IUploadFileOption) => {
   const storage = admin.storage().bucket();
 
   return new Promise<string>((resolve, reject) => {
     if (!file) {
       reject("No image file");
     }
-    let newFileName = `user/avatar/${uid ? uid : ""}_${Date.now()}_${
-      file.originalname
-    }`;
+    let newFileName = `${options?.path}${
+      options?.uid ? options.uid : ""
+    }_${Date.now()}_${file.originalname}`;
 
     let fileUpload = storage.file(newFileName);
 
