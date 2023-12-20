@@ -10,11 +10,12 @@ const createWallet = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqBody: ICreateWalletRequest = req.body;
 
-  const newWallet = new WalletModel();
-  newWallet.name = reqBody.name;
+  const newWallet = new WalletModel(reqBody);
+  // newWallet.walletName = reqBody.walletName;
+  // newWallet.walletAbbreviation = reqBody.walletAbbreviation;
+  // newWallet.holderName = reqBody.holderName;
   newWallet.ownerUID = tokenData.uid;
-  newWallet.cardNumber = reqBody.cardNumber;
-  newWallet.type = reqBody.type || "debit";
+  newWallet.type = reqBody.type || "wallet";
 
   const createNewWallet = newWallet.save();
 

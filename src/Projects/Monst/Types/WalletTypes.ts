@@ -9,21 +9,32 @@ export type ITransaction = {
 };
 
 export type IWallet = {
-  name: string;
+  id: string;
   ownerUID: string;
-  cardNumber: string;
-  logo?: string;
+  logo: string;
+  walletName: string;
+  walletAbbreviation: string;
+  holderName: string;
+  holderNumber: string;
   balance: number;
   currency: ICurrencyTypes;
-  transaction: Types.Array<Types.ObjectId>;
+  transaction: String[];
+  imageUrl: string;
+  monthDiff: number;
+  percentDiff: number;
   type: IWalletType;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ICreateWalletRequest = {
-  name: string;
-  ownerUID: string;
-  cardNumber: string;
-  type?: IWalletType;
+  logo: string;
+  walletName: string;
+  walletAbbreviation: string;
+  holderName: string;
+  holderNumber: string;
+  balance: number;
+  currency: ICurrencyTypes;
+  type: IWalletType;
+  image: File;
 };

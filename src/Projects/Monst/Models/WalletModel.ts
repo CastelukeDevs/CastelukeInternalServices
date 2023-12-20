@@ -1,22 +1,23 @@
-import { Model, Schema, model } from "mongoose";
+import { Model, Schema, Types, model } from "mongoose";
 import { IWallet } from "../Types/WalletTypes";
 
 const WalletDataSchema = new Schema<IWallet, Model<IWallet>>(
   {
-    name: { type: String, required: true },
+    logo: { type: String, default: "card-outline" },
     ownerUID: { type: String, required: true },
-    cardNumber: { type: String, required: true },
-    logo: { type: String, default: "logo-default" },
+    walletName: { type: String, required: true },
+    walletAbbreviation: { type: String, required: true },
+    holderName: { type: String, required: true },
+    holderNumber: { type: String, required: true },
     balance: { type: Number, default: 0 },
     currency: {
-      type: Object,
-      default: {
-        currency: "US Dollar",
-        abbreviation: "USD",
-        sign: "$",
-      },
+      type: String,
+      default: "IDR",
     },
-    transaction: [{ value: Number, note: String }],
+    imageUrl: String,
+    monthDiff: { type: Number, default: 0 },
+    percentDiff: { type: Number, default: 0 },
+    transaction: { type: [Types.ObjectId], ref: "Transaction" },
     type: { type: String, default: "wallet" },
   },
   { timestamps: true }
