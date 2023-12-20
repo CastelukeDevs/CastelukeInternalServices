@@ -1,5 +1,5 @@
 import { Model, Schema, Types, model } from "mongoose";
-import { IAccount } from "../Types/BalanceTypes";
+import { IAccount } from "../Types/AccountTypes";
 
 const AccountDataSchema = new Schema<IAccount, Model<IAccount>>(
   {
@@ -10,12 +10,8 @@ const AccountDataSchema = new Schema<IAccount, Model<IAccount>>(
     totalBalance: { type: Number, default: 0 },
     wallet: { type: [Types.ObjectId], ref: "Wallets" },
     defaultCurrency: {
-      type: Object,
-      default: {
-        currency: "US Dollar",
-        abbreviation: "USD",
-        sign: "$",
-      },
+      type: String,
+      default: "IDR",
     },
   },
   { timestamps: true }
