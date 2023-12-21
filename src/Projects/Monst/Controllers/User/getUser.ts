@@ -24,16 +24,15 @@ const getMonstUser = async (req: Request, res: Response) => {
           "lastSignIn",
         ])
       );
-
     res.status(StatusCode.notFound).send({
       message: "User not found",
-      code: StatusCode.notFound,
+      status: StatusCode.notFound,
     });
   } catch (error: any) {
     return res.status(StatusCode.generalError).send({
       message: error.message,
       error: error,
-      code: StatusCode.generalError,
+      status: StatusCode.generalError,
     });
   }
 };

@@ -14,7 +14,7 @@ const refreshUserAccount = async (req: Request, res: Response) => {
   if (userAccount == null) {
     res.status(StatusCode.notFound).send({
       message: "User account not found",
-      code: StatusCode.notFound,
+      status: StatusCode.notFound,
     });
     return;
   }
@@ -32,7 +32,7 @@ const refreshUserAccount = async (req: Request, res: Response) => {
   });
 
   const newUserBalance = await userAccount.updateOne({
-    totalBalance: newBalance,
+    totalBalance: newBalance.toFixed(2),
   });
 
   res.send(newUserBalance);

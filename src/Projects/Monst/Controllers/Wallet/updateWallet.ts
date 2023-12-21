@@ -19,7 +19,7 @@ const updateWallet = async (req: Request, res: Response) => {
   if (walletId == null) {
     return res.status(StatusCode.badRequest).send({
       message: "Missing/Missing wallet id",
-      code: StatusCode.badRequest,
+      status: StatusCode.badRequest,
     });
   }
 
@@ -29,7 +29,7 @@ const updateWallet = async (req: Request, res: Response) => {
 
       res.status(StatusCode.generalError).send({
         message: error.message,
-        code: StatusCode.badRequest,
+        status: StatusCode.badRequest,
         error,
       });
       return null;
@@ -39,7 +39,7 @@ const updateWallet = async (req: Request, res: Response) => {
   if (wallet?.ownerUID != tokenData.uid) {
     return res.status(StatusCode.unauthorized).send({
       message: "Unauthorized/Wallet is not owned by user",
-      code: StatusCode.unauthorized,
+      status: StatusCode.unauthorized,
     });
   }
 
@@ -65,7 +65,7 @@ const updateWallet = async (req: Request, res: Response) => {
       console.error("update wallet error:", error);
       res.status(StatusCode.generalError).send({
         message: error.message,
-        code: StatusCode.badRequest,
+        status: StatusCode.badRequest,
         error,
       });
     });

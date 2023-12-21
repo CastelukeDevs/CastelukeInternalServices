@@ -12,6 +12,8 @@ const createWallet = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqBody: ICreateWalletRequest = req.body;
 
+  console.log("wallet creation", reqBody);
+
   const files = req.files as Express.Multer.File[];
   const file: Express.Multer.File = files[0];
 
@@ -45,7 +47,7 @@ const createWallet = async (req: Request, res: Response) => {
     .catch((error: ErrorDescription) => {
       res.status(StatusCode.generalError).send({
         message: error.message,
-        code: StatusCode.generalError,
+        status: StatusCode.generalError,
         error,
       });
     });

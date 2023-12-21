@@ -36,7 +36,7 @@ const updateUser = async (req: Request, res: Response) => {
   }).catch((error: ErrorDescription) => {
     res.status(StatusCode.generalError).send({
       message: error.errmsg,
-      code: StatusCode.generalError,
+      status: StatusCode.generalError,
       error,
     });
   });

@@ -11,7 +11,7 @@ const getUserAccount = async (req: Request, res: Response) => {
 
   res.status(StatusCode.notFound).send({
     message: "User account not found",
-    code: StatusCode.notFound,
+    status: StatusCode.notFound,
   });
 };
 

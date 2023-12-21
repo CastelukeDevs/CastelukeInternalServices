@@ -72,14 +72,14 @@ const createUser = async (req: Request, res: Response) => {
         return res.status(StatusCode.generalError).send({
           message: "Exist/User data already exist",
           error: err,
-          code: StatusCode.generalError,
+          status: StatusCode.generalError,
         });
       }
 
       return res.status(StatusCode.generalError).send({
         message: err.message,
         error: err,
-        code: StatusCode.generalError,
+        status: StatusCode.generalError,
       });
     });
 };
