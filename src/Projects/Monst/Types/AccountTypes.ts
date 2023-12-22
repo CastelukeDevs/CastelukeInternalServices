@@ -1,10 +1,10 @@
-import { ObjectId, Types } from "mongoose";
-import { ICurrencyTypes } from "./CurrencyTypes";
+import { Types } from "mongoose";
+import { ITransactionMini } from "./TransactionTypes";
 
 export type IAccount = {
   _id: string;
   totalBalance: number;
   wallet: Types.Array<Types.ObjectId>;
-  defaultCurrency: ICurrencyTypes;
+  transaction: Types.DocumentArray<ITransactionMini>;
   id: string;
 };
