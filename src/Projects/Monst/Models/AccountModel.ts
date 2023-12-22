@@ -9,9 +9,9 @@ const AccountDataSchema = new Schema<IAccount, Model<IAccount>>(
     },
     totalBalance: { type: Number, default: 0 },
     wallet: { type: [Types.ObjectId], ref: "Wallets" },
-    defaultCurrency: {
-      type: String,
-      default: "IDR",
+    transaction: {
+      type: [{ _id: Schema.Types.ObjectId, type: String, date: Date }],
+      ref: "Transactions",
     },
   },
   { timestamps: true }

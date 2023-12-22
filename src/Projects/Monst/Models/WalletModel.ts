@@ -17,7 +17,10 @@ const WalletDataSchema = new Schema<IWallet, Model<IWallet>>(
     imageUrl: String,
     monthDiff: { type: Number, default: 0 },
     percentDiff: { type: Number, default: 0 },
-    transaction: { type: [Types.ObjectId], ref: "Transaction" },
+    transaction: {
+      type: [{ _id: Schema.Types.ObjectId, type: String, date: Date }],
+      ref: "Transactions",
+    },
     type: { type: String, default: "wallet" },
   },
   { timestamps: true }
