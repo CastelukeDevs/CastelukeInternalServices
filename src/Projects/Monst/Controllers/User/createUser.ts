@@ -7,11 +7,11 @@ import StatusCode from "@Utilities/StatusCode";
 import UploadFile from "@Utilities/UploadFile";
 import UserModel from "@Projects/Monst/Models/UserModel";
 import BalanceModel from "@Projects/Monst/Models/AccountModel";
-import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
+import { IUserCreateUpdateRequest } from "@Projects/Monst/Types/UserTypes";
 
 const createUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
-  const reqForm: ICreateUserRequest = req.body;
+  const reqForm: IUserCreateUpdateRequest = req.body;
 
   const testObject = {
     1: reqForm.firstName,
@@ -36,9 +36,9 @@ const createUser = async (req: Request, res: Response) => {
   newUser.firstName = reqForm.firstName;
   newUser.lastName = reqForm.lastName;
   newUser.dateOfBirth = reqForm.dateOfBirth;
+  newUser.defaultCurrency = reqForm.defaultCurrency || "IDR";
 
   newBalance._id = tokenData.uid;
-  newBalance.defaultCurrency = reqForm.defaultCurrency;
 
   const file = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -49,11 +49,6 @@ const createUser = async (req: Request, res: Response) => {
       })
       .catch((err: any) => {
         console.log("upload error", err);
-
-        // return res.status(StatusCode.generalError).send({
-        //   message: err,
-        //   code: StatusCode.generalError,
-        // });
       });
   }
 

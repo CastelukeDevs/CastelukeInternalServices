@@ -5,11 +5,11 @@ import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import UploadFile from "@Utilities/UploadFile";
 import StatusCode from "@Utilities/StatusCode";
 import UserModel from "@Projects/Monst/Models/UserModel";
-import { ICreateUserRequest } from "@Projects/Monst/Types/UserTypes";
+import { IUserCreateUpdateRequest } from "@Projects/Monst/Types/UserTypes";
 
 const updateUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
-  const reqForm: Partial<ICreateUserRequest> = req.body;
+  const reqForm: Partial<IUserCreateUpdateRequest> = req.body;
 
   const test = req.files;
   const files = req.files as Express.Multer.File[];

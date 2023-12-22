@@ -31,6 +31,7 @@ const UserDataSchema = new Schema<IUser, Model<IUser>>(
     lastSignIn: { type: Date, default: new Date() },
     level: { type: Number, default: 0 },
     points: { type: Number, default: 0 },
+    defaultCurrency: { type: String, default: "IDR" },
   },
   { timestamps: true }
 );
