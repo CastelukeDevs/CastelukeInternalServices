@@ -1,40 +1,31 @@
 import { Types } from "mongoose";
 import { ICurrencyTypes } from "./CurrencyTypes";
+import { ITransactionMini } from "./TransactionTypes";
 
 export type IWalletType = "wallet" | "debit" | "credit";
 
-export type ITransaction = {
-  value: number;
-  note: string;
+export type IWalletMain = {
+  logo: string;
+  walletName: string;
+  walletAbbreviation: string;
+  holderName: string;
+  holderNumber: string;
+  balance: number;
+  currency: ICurrencyTypes;
+  type: IWalletType;
 };
 
 export type IWallet = {
   id: string;
   ownerUID: string;
-  logo: string;
-  walletName: string;
-  walletAbbreviation: string;
-  holderName: string;
-  holderNumber: string;
-  balance: number;
-  currency: ICurrencyTypes;
-  transaction: String[];
+  transaction: Types.DocumentArray<ITransactionMini>;
   imageUrl: string;
   monthDiff: number;
   percentDiff: number;
-  type: IWalletType;
   createdAt: string;
   updatedAt: string;
-};
+} & IWalletMain;
 
-export type ICreateWalletRequest = {
-  logo: string;
-  walletName: string;
-  walletAbbreviation: string;
-  holderName: string;
-  holderNumber: string;
-  balance: number;
-  currency: ICurrencyTypes;
-  type: IWalletType;
+export type IWalletCreateUpdateRequest = {
   image: File;
-};
+} & IWalletMain;
