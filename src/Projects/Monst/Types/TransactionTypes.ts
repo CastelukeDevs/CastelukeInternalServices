@@ -11,9 +11,6 @@ export type ICategory = {
   type?: ITransactionType;
 };
 
-// export type ITransactionCategories<T extends ITransactionType> =
-//   (typeof TransactionCategoriesList)[T][number]["category"];
-
 export type ITags = {
   _id: Types.ObjectId;
   tags: string;
@@ -32,13 +29,14 @@ export type ITransactionItems = {
 };
 
 export type ITransactionMini = {
-  _id: Types.ObjectId;
-  type: ITransactionType;
+  _id?: Types.ObjectId;
+  // id: Types.ObjectId;
+  transactionType: ITransactionType;
   date: Date;
 };
 
 export type ITransactionMain = {
-  id: string;
+  // id: string;
   ownerUID: string;
   walletId: Types.ObjectId;
   type: ITransactionType;
@@ -54,10 +52,9 @@ export type ITransactionMain = {
 };
 
 export type ITransaction = {
-  _id: string;
+  id: string;
   createdAt: number;
   updatedAt: number;
-  id: string;
 } & ITransactionMain;
 
 export type ITransactionCreateUpdateRequest = {

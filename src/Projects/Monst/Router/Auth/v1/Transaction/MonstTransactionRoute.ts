@@ -4,11 +4,12 @@ import { IWalletCreateUpdateRequest } from "@Projects/Monst/Types/WalletTypes";
 import {
   ITransactionCreateUpdateRequest,
   ITransactionItems,
+  ITransactionMini,
 } from "@Projects/Monst/Types/TransactionTypes";
 import TransactionModel from "@Projects/Monst/Models/TransactionModel";
 import WalletModel from "@Projects/Monst/Models/WalletModel";
 import AccountModel from "@Projects/Monst/Models/AccountModel";
-import { ErrorDescription } from "mongodb";
+import { ErrorDescription, ObjectId } from "mongodb";
 import StatusCode from "@Utilities/StatusCode";
 import getTransactionCategory from "@Projects/Monst/Utilities/getTransactionCategory";
 
@@ -37,9 +38,9 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
       : getTransactionCategory(category as string, reqBody.type);
   newTransaction.items?.push();
 
-  const miniTransaction = {
+  const miniTransaction: ITransactionMini = {
     _id: newTransaction._id,
-    type: newTransaction.type,
+    transactionType: newTransaction.type,
     date: newTransaction.date,
   };
 
@@ -49,17 +50,8 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
     newTransaction.toJSON(),
     req.files
   );
-  return res.send(newTransaction.toJSON());
-  const createTransaction = newTransaction
-    .save()
-    .catch((error: ErrorDescription) => {
-      console.error("error create wallet / updating files", error);
-      res.status(StatusCode.generalError).send({
-        message: error.message,
-        status: StatusCode.generalError,
-        error,
-      });
-    });
+  // return res.send(miniTransaction);
+  const createTransaction = newTransaction.save();
 
   const updateWallet = WalletModel.findByIdAndUpdate(newTransaction.walletId, {
     $push: {
@@ -78,10 +70,15 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
 
   await Promise.all([createTransaction, updateWallet, updateAccount])
     .then((result) => {
+      console.log("Transaction creation success", result);
+
       res.send(result[0]);
     })
     .catch((error: ErrorDescription) => {
-      console.error("error create wallet / updating transaction", error);
+      console.error(
+        "Transaction error create transaction / updating wallet",
+        error
+      );
       res.status(StatusCode.generalError).send({
         message: error.message,
         status: StatusCode.generalError,
@@ -89,7 +86,7 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
       });
     });
 
-  res.send(newTransaction);
+  // res.send(results);
 });
 
 export default MonstTransactionRoute;

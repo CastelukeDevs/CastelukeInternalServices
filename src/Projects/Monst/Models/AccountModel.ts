@@ -9,10 +9,13 @@ const AccountDataSchema = new Schema<IAccount, Model<IAccount>>(
     },
     totalBalance: { type: Number, default: 0 },
     wallet: { type: [Types.ObjectId], ref: "Wallets" },
-    transaction: {
-      type: [{ _id: Schema.Types.ObjectId, type: String, date: Date }],
-      ref: "Transactions",
-    },
+    transaction: [
+      {
+        _id: { type: Schema.Types.ObjectId, ref: "Transactions" },
+        transactionType: String,
+        date: Date,
+      },
+    ],
   },
   { timestamps: true }
 );
