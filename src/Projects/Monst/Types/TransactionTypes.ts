@@ -39,7 +39,7 @@ export type ITransactionMain = {
   // id: string;
   ownerUID: string;
   walletId: Types.ObjectId;
-  type: ITransactionType;
+  transactionType: ITransactionType;
   category: ICategory | string;
   subCategories?: Types.Array<string>;
   amount: number;

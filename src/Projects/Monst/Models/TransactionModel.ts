@@ -6,7 +6,7 @@ const TransactionDataSchema = new Schema<ITransaction, Model<ITransaction>>(
   {
     ownerUID: { type: String, required: true },
     walletId: { type: Schema.Types.ObjectId, required: true, ref: "Wallets" },
-    type: { type: String, required: true },
+    transactionType: { type: String, required: true },
     category: { type: Schema.Types.Mixed, required: true },
     subCategories: { type: [String], default: [] },
     amount: { type: Number, required: true },

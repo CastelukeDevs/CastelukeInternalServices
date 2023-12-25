@@ -12,6 +12,7 @@ import AccountModel from "@Projects/Monst/Models/AccountModel";
 import { ErrorDescription, ObjectId } from "mongodb";
 import StatusCode from "@Utilities/StatusCode";
 import getTransactionCategory from "@Projects/Monst/Utilities/getTransactionCategory";
+import getTransactionAmount from "@Projects/Monst/Utilities/getTransactionAmount";
 
 const MonstTransactionRoute = Router();
 
@@ -28,6 +29,17 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqBody: ITransactionCreateUpdateRequest = req.body;
 
+  //Check if transfer form is properly filled
+  if (
+    reqBody.transactionType === "Transfer" &&
+    reqBody.targetWallet == undefined
+  ) {
+    return res.status(StatusCode.badRequest).send({
+      message: "Missing/Missing targetWallet",
+      status: StatusCode.badRequest,
+    });
+  }
+
   const category = reqBody.category;
 
   const newTransaction = new TransactionModel(reqBody);
@@ -35,29 +47,42 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
   newTransaction.category =
     typeof category != "string"
       ? category
-      : getTransactionCategory(category as string, reqBody.type);
+      : getTransactionCategory(category as string, reqBody.transactionType);
   newTransaction.items?.push();
 
   const miniTransaction: ITransactionMini = {
     _id: newTransaction._id,
-    transactionType: newTransaction.type,
+    transactionType: newTransaction.transactionType,
     date: newTransaction.date,
   };
 
-  console.log(
-    "new transaction creation request",
-    reqBody,
-    newTransaction.toJSON(),
-    req.files
-  );
-  // return res.send(miniTransaction);
   const createTransaction = newTransaction.save();
 
   const updateWallet = WalletModel.findByIdAndUpdate(newTransaction.walletId, {
     $push: {
       transaction: miniTransaction,
     },
+    $inc: {
+      balance: getTransactionAmount(
+        newTransaction.amount,
+        newTransaction.transactionType !== "Transfer"
+          ? newTransaction.transactionType
+          : "Expense"
+      ),
+    },
   });
+
+  const targetWallet = WalletModel.findByIdAndUpdate(
+    newTransaction.targetWallet,
+    {
+      $push: {
+        transaction: miniTransaction,
+      },
+      $inc: {
+        balance: getTransactionAmount(newTransaction.amount, "Income"),
+      },
+    }
+  );
 
   const updateAccount = AccountModel.findByIdAndUpdate(
     newTransaction.ownerUID,
@@ -68,7 +93,12 @@ MonstTransactionRoute.post("/", async (req: Request, res: Response) => {
     }
   );
 
-  await Promise.all([createTransaction, updateWallet, updateAccount])
+  await Promise.all([
+    createTransaction,
+    updateWallet,
+    targetWallet,
+    updateAccount,
+  ])
     .then((result) => {
       console.log("Transaction creation success", result);
 
