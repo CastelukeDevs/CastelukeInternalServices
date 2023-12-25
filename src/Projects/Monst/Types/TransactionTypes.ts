@@ -30,13 +30,11 @@ export type ITransactionItems = {
 
 export type ITransactionMini = {
   _id?: Types.ObjectId;
-  // id: Types.ObjectId;
   transactionType: ITransactionType;
   date: Date;
 };
 
 export type ITransactionMain = {
-  // id: string;
   ownerUID: string;
   walletId: Types.ObjectId;
   transactionType: ITransactionType;
