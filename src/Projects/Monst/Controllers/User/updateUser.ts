@@ -11,7 +11,6 @@ const updateUser = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqForm: Partial<IUserCreateUpdateRequest> = req.body;
 
-  const test = req.files;
   const files = req.files as Express.Multer.File[];
   const file: Express.Multer.File = files[0];
   console.log("file", files);
