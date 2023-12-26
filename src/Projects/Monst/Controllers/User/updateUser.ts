@@ -15,6 +15,7 @@ const updateUser = async (req: Request, res: Response) => {
   const file: Express.Multer.File = files[0];
   console.log("file", files);
 
+  //TODO: Refine upload file
   if (file) {
     await UploadFile(file, { path: "user/avatar/", uid: tokenData.uid })
       .then((url) => {

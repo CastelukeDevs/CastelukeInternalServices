@@ -12,6 +12,9 @@ import WalletModel from "@Projects/Monst/Models/WalletModel";
 type IUpdateTransactionQuery = {
   id: string;
 };
+/**
+ * //TODO: date update case
+ */
 export default async (req: Request<IUpdateTransactionQuery>, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqBody: ITransactionCreateUpdateRequest = req.body;
@@ -54,15 +57,26 @@ export default async (req: Request<IUpdateTransactionQuery>, res: Response) => {
       !isTransfer ? transaction?.transactionType : "subtract"
     );
 
-    await wallet?.updateOne({
+    const updateWallet = wallet?.updateOne({
       $inc: {
         balance: newBalance,
       },
     });
-    await targetWallet?.updateOne({
+
+    const updateTargetWallet = targetWallet?.updateOne({
       $inc: {
         balance: -newBalance,
       },
+    });
+
+    await Promise.all([updateWallet, updateTargetWallet]).catch((error) => {
+      const message = "Error/update wallet error";
+      console.error(message + ":", error);
+      res.status(StatusCode.generalError).send({
+        message,
+        status: StatusCode.generalError,
+        error,
+      });
     });
   }
 
@@ -74,9 +88,10 @@ export default async (req: Request<IUpdateTransactionQuery>, res: Response) => {
       res.send({ message: message });
     })
     .catch((error: ErrorDescription) => {
-      console.error("update transaction error:", error);
+      const message = "Error/update transaction error";
+      console.error(message + ":", error);
       res.status(StatusCode.generalError).send({
-        message: error.message,
+        message,
         status: StatusCode.generalError,
         error,
       });
