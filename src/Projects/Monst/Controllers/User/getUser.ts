@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 
-import pickObject from "@Utilities/PickObject";
+import { pickObject } from "@Utilities/PickObject";
 import UserModel from "@Projects/Monst/Models/UserModel";
 import StatusCode from "@Utilities/StatusCode";
 
