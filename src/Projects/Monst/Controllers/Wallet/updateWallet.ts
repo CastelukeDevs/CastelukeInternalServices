@@ -65,7 +65,7 @@ const updateWallet = async (req: Request, res: Response) => {
       console.error("update wallet error:", error);
       res.status(StatusCode.generalError).send({
         message: error.message,
-        status: StatusCode.badRequest,
+        status: StatusCode.generalError,
         error,
       });
     });

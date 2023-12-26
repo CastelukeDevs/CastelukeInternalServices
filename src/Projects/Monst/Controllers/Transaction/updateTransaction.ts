@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import { ErrorDescription } from "mongodb";
 
 import { ITransactionCreateUpdateRequest } from "@Projects/Monst/Types/TransactionTypes";
 import StatusCode from "@Utilities/StatusCode";
@@ -65,9 +66,19 @@ export default async (req: Request<IUpdateTransactionQuery>, res: Response) => {
     });
   }
 
-  await transaction?.updateOne(reqBody).then((result) => {
-    const message = `transaction: ${transaction.id} of type ${transaction.transactionType} updated`;
-    console.log(message, result);
-    res.send({ message: message });
-  });
+  await transaction
+    ?.updateOne(reqBody)
+    .then((result) => {
+      const message = `transaction: ${transaction.id} of type ${transaction.transactionType} updated`;
+      console.log(message, result);
+      res.send({ message: message });
+    })
+    .catch((error: ErrorDescription) => {
+      console.error("update transaction error:", error);
+      res.status(StatusCode.generalError).send({
+        message: error.message,
+        status: StatusCode.generalError,
+        error,
+      });
+    });
 };
