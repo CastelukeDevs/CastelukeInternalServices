@@ -1,4 +1,5 @@
 import createWallet from "@Projects/Monst/Controllers/Wallet/createWallet";
+import deleteWallet from "@Projects/Monst/Controllers/Wallet/deleteWallet";
 import getWallet from "@Projects/Monst/Controllers/Wallet/getWallet";
 import updateWallet from "@Projects/Monst/Controllers/Wallet/updateWallet";
 import { Router } from "express";
@@ -17,5 +18,6 @@ MonstWalletRoute.get(branchTest, (req, res) => {
 MonstWalletRoute.post("/", createWallet);
 MonstWalletRoute.get("/", getWallet);
 MonstWalletRoute.put("/", updateWallet);
+MonstWalletRoute.delete("/", deleteWallet);
 
 export default MonstWalletRoute;
