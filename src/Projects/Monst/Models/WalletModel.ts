@@ -25,6 +25,7 @@ const WalletDataSchema = new Schema<IWallet, Model<IWallet>>(
       },
     ],
     type: { type: String, default: "wallet" },
+    status: { type: String, default: "active" },
   },
   { timestamps: true }
 );

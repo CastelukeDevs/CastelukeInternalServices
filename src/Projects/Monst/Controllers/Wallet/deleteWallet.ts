@@ -48,6 +48,8 @@ export default async (req: Request<{ id: string }>, res: Response) => {
       });
     });
 
+  await wallet.updateOne({ status: "deleted" });
+
   const message = `wallet: ${wallet.id} of type ${wallet.type} deleted`;
   console.log(message);
   res.send({ message: message });

@@ -3,6 +3,7 @@ import { ICurrencyTypes } from "./CurrencyTypes";
 import { ITransactionMini } from "./TransactionTypes";
 
 export type IWalletType = "wallet" | "debit" | "credit";
+export type IWalletStatus = "active" | "inactive" | "deleted";
 
 export type IWalletMain = {
   logo: string;
@@ -13,6 +14,7 @@ export type IWalletMain = {
   balance: number;
   currency: ICurrencyTypes;
   type: IWalletType;
+  status: IWalletStatus;
 };
 
 export type IWallet = {
