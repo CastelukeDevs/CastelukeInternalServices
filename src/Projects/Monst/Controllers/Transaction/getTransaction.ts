@@ -14,19 +14,31 @@ type ITransactionQuery = {
   walletId?: string;
   transactionId?: string;
   transactionType?: ITransactionType;
+  limit?: string;
+  page?: string;
 };
 
 export default async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqQuery: ITransactionQuery = req.query;
 
+  const limit = parseFloat(reqQuery.limit || "20");
+  const page = parseFloat(reqQuery.page || "1");
+  const elementSkip = (page - 1) * limit;
+
   let TransactionList: ITransactionMini[] = [];
 
   if (reqQuery.walletId) {
-    const wallet = await WalletModel.findById(reqQuery.walletId);
+    const wallet = await WalletModel.findById(reqQuery.walletId).slice(
+      "transaction",
+      [elementSkip, limit]
+    );
     TransactionList = wallet?.transaction || [];
   } else {
-    const account = await AccountModel.findById(tokenData.uid);
+    const account = await AccountModel.findById(tokenData.uid).slice(
+      "transaction",
+      [elementSkip, limit]
+    );
     TransactionList = account?.transaction || [];
   }
 
