@@ -8,7 +8,7 @@ import { IWallet } from "@Projects/Monst/Types/WalletTypes";
 import StatusCode from "@Utilities/StatusCode";
 import UploadFile from "@Utilities/UploadFile";
 
-const updateWallet = async (req: Request, res: Response) => {
+export default async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const walletId = req.query.id as unknown as Types.ObjectId;
   const walletData: Partial<IWallet> = req.body;
@@ -70,5 +70,3 @@ const updateWallet = async (req: Request, res: Response) => {
       });
     });
 };
-
-export default updateWallet;

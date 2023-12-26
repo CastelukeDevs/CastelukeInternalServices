@@ -9,7 +9,7 @@ import StatusCode from "@Utilities/StatusCode";
 import UploadFile from "@Utilities/UploadFile";
 import UserModel from "@Projects/Monst/Models/UserModel";
 
-const createWallet = async (req: Request, res: Response) => {
+export default async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqBody: IWalletCreateUpdateRequest = req.body;
 
@@ -55,5 +55,3 @@ const createWallet = async (req: Request, res: Response) => {
       });
     });
 };
-
-export default createWallet;
