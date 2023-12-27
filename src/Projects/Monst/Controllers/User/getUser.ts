@@ -22,6 +22,7 @@ const getMonstUser = async (req: Request, res: Response) => {
           "level",
           "points",
           "lastSignIn",
+          "defaultCurrency",
         ])
       );
     res.status(StatusCode.notFound).send({
