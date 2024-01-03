@@ -9,7 +9,7 @@ const getTransactionAmount = (
     return -amount;
   }
 
-  return amount;
+  return +amount;
 };
 
 export default getTransactionAmount;

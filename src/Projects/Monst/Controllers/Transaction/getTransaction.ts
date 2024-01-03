@@ -14,16 +14,21 @@ type ITransactionQuery = {
   walletId?: string;
   transactionId?: string;
   transactionType?: ITransactionType;
-  limit?: string;
-  page?: string;
+  limit?: number;
+  page?: number;
 };
 
 export default async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const reqQuery: ITransactionQuery = req.query;
 
-  const limit = parseFloat(reqQuery.limit || "20");
-  const page = parseFloat(reqQuery.page || "1");
+  console.log("getting transaction", reqQuery);
+
+  if (reqQuery.limit === undefined) reqQuery.limit = 20;
+  if (reqQuery.page === undefined) reqQuery.page = 1;
+
+  const limit = +reqQuery.limit; //parseFloat(reqQuery.limit || "20");
+  const page = +reqQuery.page; //parseFloat(reqQuery.page || "1");
   const elementSkip = (page - 1) * limit;
 
   let TransactionList: ITransactionMini[] = [];
@@ -53,5 +58,5 @@ export default async (req: Request, res: Response) => {
     ...options,
   });
 
-  res.send(reqQuery.transactionId ? transactionList[0] : transactionList);
+  res.send({ transactionList, limit, page });
 };

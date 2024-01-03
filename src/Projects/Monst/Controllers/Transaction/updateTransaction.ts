@@ -49,8 +49,10 @@ export default async (req: Request<IUpdateTransactionQuery>, res: Response) => {
 
   if (reqBody.amount) {
     const lastAmount = transaction?.amount || 0;
-    const newAmount = parseFloat(reqBody.amount as unknown as string);
+    const newAmount = +reqBody.amount; //parseFloat( as unknown as string);
     const diff = -lastAmount + newAmount;
+
+    console.log(newAmount);
 
     const newBalance = getTransactionAmount(
       diff,

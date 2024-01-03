@@ -7,7 +7,6 @@ import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 const getUserAccount = async (req: Request, res: Response) => {
   const tokenData: DecodedIdToken = res.locals.authData!;
   const userAccount = await AccountModel.findById(tokenData.uid);
-  console.log("get user account", userAccount);
 
   if (userAccount) {
     const dataPayload = omitObject(userAccount.toObject(), [
