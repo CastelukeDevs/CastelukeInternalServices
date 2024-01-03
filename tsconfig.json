@@ -114,9 +114,6 @@
       "@Utilities/*": ["src/Utilities/*"],
       "@Projects/*": ["src/Projects/*"]
       //
-      // "@MonstRoute": ["src/Projects/Monst/Router/*"]
-      // "@Controllers/*":src/Projects/Controllers/*s/*"],
-      // "@Models/*": ["src/Projects/Models/*"],
     }
     // "include": ["src"]
   }
