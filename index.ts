@@ -14,10 +14,12 @@ initializeApp({
 });
 
 import express, { Application } from "express";
-import RootRouter from "./src/Routes/Routes";
+// import RootRouter from "./src/Routes/Routes";
 import path from "path";
 import mongoose from "mongoose";
 import MulterProvider from "./src/Config/Multer/MulterProvider";
+import RootRouter from "@Routes/Routes";
+import JsonParser from "@Middlewares/JsonParser";
 
 const app: Application = express();
 const port = process.env.SERVICE_PORT || 8000;
@@ -33,6 +35,7 @@ async function main() {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(MulterProvider);
+app.use(JsonParser);
 
 app.use(RootRouter);
 
