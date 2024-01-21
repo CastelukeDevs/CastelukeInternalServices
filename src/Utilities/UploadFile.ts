@@ -12,7 +12,7 @@ export default (file: any, options: IUploadFileOption) => {
 
   return new Promise<string>((resolve, reject) => {
     if (!file) {
-      reject("No image file");
+      reject("No file");
     }
     let newFileName = `${options?.path}${
       options?.uid ? options.uid : ""

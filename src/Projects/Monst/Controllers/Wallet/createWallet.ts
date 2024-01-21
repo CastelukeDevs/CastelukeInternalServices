@@ -26,8 +26,6 @@ export default async (req: Request, res: Response) => {
   newWallet.type = reqBody.type || "wallet";
   newWallet.currency = reqBody.currency || user?.defaultCurrency || "IDR";
 
-  const createNewWallet = newWallet.save();
-
   const updateBalanceWallet = BalanceModel.findByIdAndUpdate(tokenData.uid, {
     $push: { wallet: newWallet.id },
   });
@@ -38,12 +36,15 @@ export default async (req: Request, res: Response) => {
         newWallet.imageUrl = url;
       })
       .catch((err: any) => {
-        console.error("error uploading files", err);
+        console.warn("error uploading files", err);
       });
   }
 
+  const createNewWallet = newWallet.save();
+
   await Promise.all([createNewWallet, updateBalanceWallet])
     .then((result) => {
+      console.log("wallet created", result[0]);
       res.send(result[0]);
     })
     .catch((error: ErrorDescription) => {
