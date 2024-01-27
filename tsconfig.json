@@ -112,8 +112,9 @@
       "@Routes/*": ["src/Routes/*"],
       "@Static/*": ["src/Static/*"],
       "@Utilities/*": ["src/Utilities/*"],
-      "@Projects/*": ["src/Projects/*"]
-      //
+      "@Controllers/*": ["src/Controllers/*"],
+      "@Models/*": ["src/Models/*"],
+      "@Types/*": ["src/Types/*"]
     }
     // "include": ["src"]
   }
