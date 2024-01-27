@@ -1,11 +1,12 @@
 import express, { Router } from "express";
 import path from "path";
-import MonstRouter from "@Projects/Monst/Router/MonstRoute";
+import MonstRootRouter from "./MoneyStory/MonstRootRouter";
 
 const RootRouter = Router();
 
 const staticPath = "/static";
 const moneyStoryPath = "/money-story";
+const authenticationPath = "/auth/v1";
 
 //Return static file json from static folder
 RootRouter.use(
@@ -20,6 +21,6 @@ RootRouter.get("/", (req, res) => {
   res.send(`Server is running..... Root: ${__dirname}`);
 });
 
-RootRouter.use(moneyStoryPath, MonstRouter);
+RootRouter.use(moneyStoryPath, MonstRootRouter);
 
 export default RootRouter;
