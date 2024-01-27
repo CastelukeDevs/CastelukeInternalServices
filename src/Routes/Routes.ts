@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import path from "path";
 import MonstRootRouter from "./MoneyStory/MonstRootRouter";
+import AuthRouter from "./Auth/AuthRouter";
 
 const RootRouter = Router();
 
@@ -21,6 +22,7 @@ RootRouter.get("/", (req, res) => {
   res.send(`Server is running..... Root: ${__dirname}`);
 });
 
+RootRouter.use(authenticationPath, AuthRouter);
 RootRouter.use(moneyStoryPath, MonstRootRouter);
 
 export default RootRouter;
